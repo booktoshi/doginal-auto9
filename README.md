@@ -62,7 +62,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]]
+![Product Name Screen Shot][product-screenshot]
 
 This project is designed to automate the inscription of images with detailed terminal output, including file names being processed, progress tracking, and error handling. It ensures each image is inscribed only once and handles specific errors with appropriate pauses.
 
