@@ -102,7 +102,7 @@ Ensure you have the following installed:
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/booktoshi/inscriber.git
+   git clone https://github.com/booktoshi/doginal-auto-inscriberv6.git
    ```
 2. Navigate to the project directory
    ```sh
