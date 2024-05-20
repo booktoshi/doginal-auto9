@@ -22,7 +22,7 @@
 <h3 align="center">Inscriber AutoV6</h3>
 
   <p align="center">
-    A script to automate the inscription of images with detailed terminal output and progress tracking.
+    This is a Doginal Inscription Auto-Inscriber that is modified from @martinseeger2's v5 Auto-Inscriber. This dynamically reads the files in your images folder as well as prints to screen pertinent information.
     <br />
     <a href="https://github.com/booktoshi/inscriber"><strong>Explore the docs »</strong></a>
     <br />
