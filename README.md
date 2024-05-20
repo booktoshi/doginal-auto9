@@ -24,7 +24,7 @@
   <p align="center">
     This is a Doginal Inscription Auto-Inscriber that is modified from @martinseeger2's v5 Auto-Inscriber. This dynamically reads the files in your images folder as well as prints to screen pertinent information.
     <br />
-    <a href="https://github.com/booktoshi/inscriber"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/booktoshi/doginal-auto-inscriberv6"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/booktoshi/inscriber">View Demo</a>
