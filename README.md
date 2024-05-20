@@ -16,7 +16,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/booktoshi/inscriber">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/new.png" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">Inscriber</h3>
@@ -68,7 +68,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]]
 
 This project is designed to automate the inscription of images with detailed terminal output, including file names being processed, progress tracking, and error handling. It ensures each image is inscribed only once and handles specific errors with appropriate pauses.
 
@@ -202,7 +202,7 @@ Project Link: [https://github.com/booktoshi/inscriber](https://github.com/bookto
 [stars-url]: https://github.com/booktoshi/doginals/stargazers
 [issues-shield]: https://img.shields.io/github/issues/booktoshi/doginals.svg?style=for-the-badge
 [issues-url]: https://github.com/booktoshi/doginals/issues
-[product-screenshot]: images/logo2.png
+[product-screenshot]: images/new.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
