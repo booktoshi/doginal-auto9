@@ -100,7 +100,7 @@ Ensure you have the following installed:
    ```
 2. Navigate to the project directory
    ```sh
-   cd inscriber
+   cd doginal-auto-inscriberv6
    ```
 3. Install required packages
    ```sh
