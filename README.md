@@ -19,7 +19,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">Inscriber</h3>
+<h3 align="center">Inscriber AutoV6</h3>
 
   <p align="center">
     A script to automate the inscription of images with detailed terminal output and progress tracking.
