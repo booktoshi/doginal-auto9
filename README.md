@@ -243,7 +243,6 @@ def print_progress(file_path, total_minted, total_files):
         total_files (int): The total number of files to be inscribed.
     """
 ```
-```
 
 <!-- ROADMAP -->
 ## Roadmap
