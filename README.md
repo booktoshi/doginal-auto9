@@ -10,8 +10,6 @@
 *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
 -->
 
-
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -28,8 +26,6 @@
     <br />
   </p>
 </div>
-
-
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -57,8 +53,6 @@
   </ol>
 </details>
 
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -68,15 +62,11 @@ This project is designed to automate the inscription of images with detailed ter
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 ### Built With
 
 * Python
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -109,8 +99,6 @@ Ensure you have the following installed:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- USAGE EXAMPLES -->
 ## Usage
 
@@ -120,11 +108,9 @@ To use the script, run the following command:
 python inscriber.py
 ```
 
-The script will prompt you to confirm the detected file extension and input the duration for pauses between functions when specific errors are detected. It will display detailed information about the progress and status of each file being inscribed.
+The script will prompt you to enter the Dogecoin address to inscribe to and will display detailed information about the progress and status of each file being inscribed.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -136,8 +122,6 @@ The script will prompt you to confirm the detected file extension and input the 
 See the [open issues](https://github.com/booktoshi/inscriber/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -155,16 +139,12 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTACT -->
 ## Contact
@@ -174,8 +154,6 @@ Booktoshi - [@twitter_handle](https://twitter.com/twitter_handle) - booktoshi@ex
 Project Link: [https://github.com/booktoshi/inscriber](https://github.com/booktoshi/inscriber)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
