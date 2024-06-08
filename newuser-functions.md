@@ -1,5 +1,3 @@
-Sure, here is a simplified version for new users, including the terminal prompts to be expected when using the script. This can be copied and pasted directly into GitHub:
-
 ```markdown
 ## Functions
 
@@ -132,5 +130,3 @@ def print_progress(file_path, total_minted, total_files):
     """
 ```
 ```
-
-This markdown provides a clear and simple explanation of the functions, making it easy for new users to understand.
