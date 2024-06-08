@@ -17,7 +17,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">Inscriber AutoV6</h3>
+<h3 align="center">Auto9 Inscriber</h3>
 
   <p align="center">
     This is a Doginal Inscription Auto-Inscriber that is modified from @martinseeger2's v5 Auto-Inscriber. This dynamically reads the files in your images folder as well as prints to screen pertinent information.
@@ -86,11 +86,11 @@ Ensure you have the following installed:
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/booktoshi/doginal-auto-inscriberv6.git
+   git clone https://github.com/booktoshi/doginal-auto9.git
    ```
 2. Navigate to the project directory
    ```sh
-   cd doginal-auto-inscriberv6
+   cd doginal-auto9
    ```
 3. Install required packages
    ```sh
@@ -105,7 +105,7 @@ Ensure you have the following installed:
 To use the script, run the following command:
 
 ```sh
-python inscriber.py
+python auto9.py
 ```
 
 The script will prompt you to enter the Dogecoin address to inscribe to and will display detailed information about the progress and status of each file being inscribed.
