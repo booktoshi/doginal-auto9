@@ -174,7 +174,6 @@ Project Link: [https://github.com/booktoshi/inscriber](https://github.com/bookto
 [stars-url]: https://github.com/booktoshi/doginals/stargazers
 [issues-shield]: https://img.shields.io/github/issues/booktoshi/doginals.svg?style=for-the-badge
 [issues-url]: https://github.com/booktoshi/doginals/issues
-[product-screenshot]: 
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
