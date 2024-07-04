@@ -3,187 +3,165 @@ import time
 import json
 import re
 import os
-from datetime import datetime
-from tqdm import tqdm  # For the loading bar
+from tqdm import tqdm
 
-def run_node_commands():
-    # Prompt user for Dogecoin address
-    doge_address = input("Please enter the Dogecoin address to inscribe to: ")
+def extract_number_from_filename(filename):
+    # Extract the number after '#' in the filename
+    match = re.search(r'#(\d+)', filename)
+    if match:
+        return int(match.group(1))
+    else:
+        return 0  # Default to 0 if no number found
 
-    # Create the inscriptionIDs folder if it doesn't exist
-    inscription_folder = './inscriptionIDs'
-    if not os.path.exists(inscription_folder):
-        os.makedirs(inscription_folder)
+def get_wallet_address():
+    wallet_address = input("Please enter the wallet address to send the inscriptions to: ")
+    return wallet_address
 
-    # Prepare the JSON file name
-    json_file_name = os.path.join(inscription_folder, "inscriptionIDs.json")
+def scan_directory(directory):
+    base_directory = f'./{directory}'
+    if not os.path.exists(base_directory):
+        print(f"Directory {base_directory} does not exist.")
+        return []
 
-    # Rename old JSON file if it exists
-    if os.path.isfile(json_file_name):
-        base_name, extension = os.path.splitext(json_file_name)
-        counter = 1
-        while os.path.isfile(f"{base_name}_{counter}{extension}"):
-            counter += 1
-        os.rename(json_file_name, f"{base_name}_{counter}{extension}")
+    files = []
+    for file_name in os.listdir(base_directory):
+        if not file_name.startswith('.') and os.path.isfile(os.path.join(base_directory, file_name)):
+            files.append(os.path.join(base_directory, file_name))
+    
+    return files
 
-    # Load existing data if any
-    data = []
-    inscribed_files = set()
-    if os.path.isfile(json_file_name):
-        with open(json_file_name, 'r') as file:
-            data = json.load(file)
-            for item in data:
-                inscribed_files.add(item['name'])
+def list_file_types(files):
+    file_types = set()
+    for file in files:
+        ext = os.path.splitext(file)[1].lower()
+        file_types.add(ext)
+    
+    return file_types
 
-    # Create or load airdropcomp.txt
-    airdrop_comp_file = "airdropcomp.txt"
-    airdrop_data = []
-    if os.path.isfile(airdrop_comp_file):
-        with open(airdrop_comp_file, 'r') as file:
-            airdrop_data = [line.strip() for line in file.readlines()]
+def confirm_file_count(files):
+    count = len(files)
+    print(f"Found {count} files in the directory.")
+    confirmation = input(f"Is this the correct number of files to process? (yes/no): ").strip().lower()
+    return confirmation == 'yes'
 
-    # Create or load completion report
-    completion_report_file = "completion_report.txt"
-    if not os.path.isfile(completion_report_file):
-        with open(completion_report_file, 'w') as file:
-            file.write("Timestamp,File,TxID,Duration,Fees,Vout\n")
+def ask_batch_processing():
+    process_in_batches = input("Would you like to process the files in batches? (yes/no): ").strip().lower()
+    if process_in_batches == 'yes':
+        batch_size = int(input("How many files should the script process before pausing for 100 seconds (max 12 for HTML files)?: ").strip())
+        batch_size = min(batch_size, 12)  # Ensure no more than 12 HTML files are batched
+        return True, batch_size
+    else:
+        return False, None
 
-    total_minted = 0
-    total_fees = 0.0
+def print_colored(text, fg_color, bg_color):
+    # Print colored text using ANSI escape codes
+    print(f"\033[38;2;{fg_color[0]};{fg_color[1]};{fg_color[2]}m\033[48;2;{bg_color[0]};{bg_color[1]};{bg_color[2]}m{text}\033[0m")
 
-    # Define the directory to search for image files
-    image_directory = './images'
+def run_node_commands(directory):
+    files = scan_directory(directory)
 
-    # Check if the directory exists
-    if not os.path.exists(image_directory):
-        print(f"Directory {image_directory} does not exist.")
+    if not files:
+        print(f"No files found in {directory}.")
         return
 
-    # Get the list of all image files in the image directory and subdirectories
-    all_files = []
-    for root, dirs, files in os.walk(image_directory):
-        for file_name in files:
-            file_path = os.path.join(root, file_name)
-            if file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tiff', '.svg')):
-                all_files.append(file_path)
+    file_types = list_file_types(files)
+    print(f"File types found in the directory: {', '.join(file_types)}")
 
-    # Create a progress bar
-    with tqdm(total=len(all_files), desc="Inscribing images", unit="file") as pbar:
-        for file_path in all_files:
-            if file_path in inscribed_files:
-                print(f"File {file_path} already inscribed, skipping.")
-                pbar.update(1)
-                continue
+    if not confirm_file_count(files):
+        print("Please check the files in the directory and try again.")
+        return
 
-            # Print the file being inscribed
-            print(f"Inscribing file: {file_path}")
+    wallet_address = get_wallet_address()
 
-            start_time = time.time()
+    process_in_batches, batch_size = ask_batch_processing()
 
-            # Construct and run the mint command
-            mint_command = f"node . mint {doge_address} {file_path}"
-            result_mint = subprocess.run(mint_command, shell=True, capture_output=True, text=True)
-            print("Output from mint command:")
-            print(result_mint.stdout)
+    # Sort files based on the number after '#'
+    files.sort(key=lambda x: extract_number_from_filename(os.path.basename(x)))
 
-            # Check if there is an error in the mint command
-            if result_mint.stderr:
-                print("Error in mint command:")
-                print(result_mint.stderr)
+    # Ensure metadata directory exists
+    metadata_directory = './metadata'
+    if not os.path.exists(metadata_directory):
+        os.makedirs(metadata_directory)
 
-            # Check for success message in the mint command's output
-            txid_search = re.search("inscription txid: (\w+)", result_mint.stdout)
-            fees_search = re.search("Fees: ([0-9.]+) DOGE", result_mint.stdout)
-            vout_search = re.search("vout: (\d+)", result_mint.stdout)
-            if txid_search and fees_search and vout_search:
-                txid = txid_search.group(1) + 'i0'
-                fees = float(fees_search.group(1))
-                vout = vout_search.group(1)
-                total_fees += fees
-                print(f"Successful mint, updating JSON file....")
-                update_json_file(json_file_name, file_path, txid)
-                airdrop_data.append(f"{doge_address},{txid}")
-                total_minted += 1
+    # Create or load inscriptionIDs.json in the metadata directory
+    json_file_name = os.path.join(metadata_directory, "inscriptionIDs.json")
+    if not os.path.isfile(json_file_name):
+        with open(json_file_name, 'w') as file:
+            json.dump([], file)
 
-                end_time = time.time()
-                duration = end_time - start_time
-                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    total_processed = 0
 
-                # Append to the completion report
-                with open(completion_report_file, 'a') as file:
-                    file.write(f"{timestamp},{file_path},{txid},{duration:.2f},{fees},{vout}\n")
+    # Set up progress bar
+    fg_color = (255, 204, 0)  # FFCC00
+    bg_color = (51, 51, 51)   # 333333
+    pbar = tqdm(total=len(files), bar_format="{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]")
+    pbar.bar_format = "{l_bar}\033[38;2;255;204;0m{bar}\033[0m| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]"
 
-                if total_minted % 12 == 0:
-                    print("Processed 12 files, taking a 120-second break...")
-                    time.sleep(120)
+    while total_processed < len(files):
+        if process_in_batches:
+            batch_files = files[total_processed:total_processed + batch_size]
+            print(f"\nProcessing batch {total_processed // batch_size + 1}")
+        else:
+            # Check for HTML files when not batching
+            if any(f.lower().endswith('.html') for f in files):
+                print("HTML files found. The script cannot proceed without batching.")
+                break
+            batch_files = files[total_processed:]
+        
+        for index, file_path in enumerate(batch_files, start=1):
+            total_file_index = total_processed + index
+            total_file_count = len(files)
+            print(f"\nProcessing file {total_file_index} of {total_file_count}: {file_path}")
 
-            # Check for specific error message in the mint command's output
-            if "'64: too-long-mempool-chain'" in result_mint.stdout:
-                print("Detected specific error message, proceeding to wallet sync in 120 seconds...")
-                time.sleep(120)
+            # Attempt to mint the file
+            success = False
+            while not success:
+                # Construct and run the mint command
+                mint_command = f"node . mint {wallet_address} {file_path}"
+                result_mint = subprocess.run(mint_command, shell=True, capture_output=True, text=True)
+                print("Output from mint command:")
+                print(result_mint.stdout)
 
-                # Loop for the second command
-                while True:
-                    wallet_sync_command = "node . wallet sync"
-                    result_sync = subprocess.run(wallet_sync_command, shell=True, capture_output=True, text=True)
-                    print("Output from wallet sync command:")
-                    print(result_sync.stdout)
+                # Check if there is an error in the mint command
+                if result_mint.stderr:
+                    print("Error in mint command:")
+                    print(result_mint.stderr)
 
-                    if result_sync.stderr:
-                        print("Error in wallet sync command:")
-                        print(result_sync.stderr)
-
-                    # Check for success message
-                    if "inscription txid" in result_sync.stdout:
-                        print("Successful inscription, extracting txid and updating JSON file.")
-                        txid_search = re.search("inscription txid: (\w+)", result_sync.stdout)
-                        fees_search = re.search("Fees: ([0-9.]+) DOGE", result_sync.stdout)
-                        vout_search = re.search("vout: (\d+)", result_sync.stdout)
-                        if txid_search and fees_search and vout_search:
-                            txid = txid_search.group(1) + 'i0'
-                            fees = float(fees_search.group(1))
-                            vout = vout_search.group(1)
-                            total_fees += fees
-                            update_json_file(json_file_name, file_path, txid)
-                            airdrop_data.append(f"{doge_address},{txid}")
-                            total_minted += 1
-
-                            end_time = time.time()
-                            duration = end_time - start_time
-                            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-                            # Append to the completion report
-                            with open(completion_report_file, 'a') as file:
-                                file.write(f"{timestamp},{file_path},{txid},{duration:.2f},{fees},{vout}\n")
-
-                            if total_minted % 12 == 0:
-                                print("Processed 12 files, taking a 120-second break...")
-                                time.sleep(120)
-                            break
-                        else:
-                            print("TXID not found in wallet sync output")
-
-                    # Check for the specific error and retry
-                    elif "'64: too-long-mempool-chain'" in result_sync.stdout:
-                        print("Detected specific error message, retrying in 120 seconds...")
-                        time.sleep(120)
+                # Check for success message in the mint command's output
+                txid_search = re.search("inscription txid: (\w+)", result_mint.stdout)
+                if txid_search:
+                    txid = txid_search.group(1)
+                    print("Successful mint, updating JSON file...")
+                    update_json_file(json_file_name, file_path, txid)
+                    success = True
+                else:
+                    # Check for specific error message in the mint command's output
+                    if "'64: too-long-mempool-chain'" in result_mint.stdout:
+                        print("Detected specific error message, waiting for 100 seconds...")
+                        time.sleep(100)
                     else:
-                        print("Unknown response, stopping the retry loop.")
-                        break
+                        print("Failed to mint file, retrying...")
 
             pbar.update(1)
 
-    # Write airdropcomp.txt
-    with open(airdrop_comp_file, 'w') as file:
-        for line in airdrop_data:
-            file.write(line + "\n")
+            if process_in_batches and total_file_index % batch_size == 0:
+                print(f"Processed {batch_size} files, taking a 100-second break...")
+                time.sleep(100)
 
-    # Print the total number of files minted and total fees
-    print(f"Total number of files minted: {total_minted}")
-    print(f"Total fees used: {total_fees} DOGE")
+        total_processed += len(batch_files)
+        if not process_in_batches:
+            break
+
+    pbar.close()
+    print_colored("All files processed.", fg_color, bg_color)
 
 def update_json_file(json_file_name, file_path, txid):
-    new_data = {
+    # Load existing data
+    with open(json_file_name, 'r') as file:
+        data = json.load(file)
+
+    # Append new data
+    data.append({
         "inscriptionId": txid,
         "name": os.path.basename(file_path),
         "file_name": os.path.basename(file_path),
@@ -196,16 +174,11 @@ def update_json_file(json_file_name, file_path, txid):
             "trait6": "trait6",
             "trait7": "trait7"
         }
-    }
+    })
 
-    data = []
-    if os.path.isfile(json_file_name):
-        with open(json_file_name, 'r') as file:
-            data = json.load(file)
-    
-    data.append(new_data)
-
+    # Write back to JSON file
     with open(json_file_name, 'w') as file:
         json.dump(data, file, indent=4)
 
-run_node_commands()
+# Run the script with 'files' directory containing various files
+run_node_commands('files')
